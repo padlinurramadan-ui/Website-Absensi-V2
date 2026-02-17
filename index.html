@@ -5865,6 +5865,36 @@
         }
 
         // ============================================
+        // FUNGSI TAMBAHAN UNTUK MENCEGAH SISWA MENGGUNAKAN CONTOH BARCODE
+        // ============================================
+        // Modifikasi fungsi fillManual agar siswa tidak bisa menggunakannya
+        function fillManual(code) {
+            if (isStudentMode) {
+                showToast('Siswa tidak dapat menambahkan data', 'error');
+                return;
+            }
+            document.getElementById('manualBarcode').value = code;
+            processManualInput();
+        }
+
+        // Modifikasi fungsi processManualInput agar siswa tidak bisa menggunakannya
+        function processManualInput() {
+            if (isStudentMode) {
+                showToast('Siswa tidak dapat menambahkan data', 'error');
+                return;
+            }
+            const barcode = document.getElementById('manualBarcode').value.trim();
+            
+            if (!barcode) {
+                showToast('Masukkan nomor barcode!', 'error');
+                return;
+            }
+            
+            processBarcode(barcode);
+            document.getElementById('manualBarcode').value = '';
+        }
+
+        // ============================================
         // KODE ASLI DARI SINI KE BAWAH TETAP SAMA (TIDAK DIUBAH)
         // ============================================
 
@@ -7042,8 +7072,7 @@
                                 <span>Klik untuk pilih file backup</span>
                             `;
                             document.getElementById('restorePassword').value = '';
-                            
-                            loadTodayData();
+                                            loadTodayData();
                             loadBackupHistory();
                         }, 500);
                     };
@@ -7703,22 +7732,8 @@
             };
         }
 
-        function processManualInput() {
-            const barcode = document.getElementById('manualBarcode').value.trim();
-            
-            if (!barcode) {
-                showToast('Masukkan nomor barcode!', 'error');
-                return;
-            }
-            
-            processBarcode(barcode);
-            document.getElementById('manualBarcode').value = '';
-        }
-
-        function fillManual(code) {
-            document.getElementById('manualBarcode').value = code;
-            processManualInput();
-        }
+        // Fungsi processManualInput sudah didefinisikan di atas (dengan proteksi)
+        // Fungsi fillManual sudah didefinisikan di atas
 
         function addAttendance(barcode, name, studentClass, major, status = 'hadir') {
             if (!db) return;
